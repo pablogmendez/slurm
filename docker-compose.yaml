@@ -1,0 +1,8 @@
+version: '2.2'
+services:
+  master:
+    build:
+      context: ./master
+      dockerfile: master.dockerfile
+    ports:
+      - "7001:22"
