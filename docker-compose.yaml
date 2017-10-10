@@ -4,6 +4,10 @@ services:
     build:
       context: ./master
       dockerfile: master.dockerfile
-    environment:
-      - http_proxy="http://pgmendez:Octubre2018@10.1.1.88:3128"
-      - https_proxy="http://pgmendez:Octubre2018@10.1.1.88:3128"
+    depends_on:
+      - node01
+
+  node01:
+    build:
+      context: ./nodes
+      dockerfile: nodes.dockerfile
