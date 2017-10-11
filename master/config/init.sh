@@ -1,6 +1,8 @@
-## 
+###############################################################
+##                           SSH                             ##
+###############################################################
+
 ## Install the openssh-server and epel-release
-##
 
 yum -y install openssh-server epel-release openssh-clients
 yum -y install pwgen
@@ -11,15 +13,12 @@ sed -i "s/#UsePrivilegeSeparation.*/UsePrivilegeSeparation no/g" /etc/ssh/sshd_c
 sed -i "s/UsePAM.*/UsePAM yes/g" /etc/ssh/sshd_config
 ssh-keygen -A
 
-##
 ## Create Set Root Password Script. Name it as set_root_pw.sh. Save it in a folder
-##
 
-#!/bin/bash
-if [ -f /.root_pw_set ]; then
-    echo "Root password already set!"
-    exit 0
-fi
+##if [ -f /.root_pw_set ]; then
+##    echo "Root password already set!"
+##    exit 0
+##fi
 
 ROOT_PASS="Alfa1234"
 PASS=${ROOT_PASS:-$(pwgen -s 12 1)}
@@ -37,12 +36,8 @@ echo ""
 echo "Please remember to change the above password as soon as possible!"
 echo "========================================================================"
 
-##
 ## Create run.sh file with following content and save it in same folder as the above
 ## set_root_pw.sh
-##
-
-#!/bin/bash
 
 if [ "${AUTHORIZED_KEYS}" != "**None**" ]; then
     echo "=> Found authorized keys"
@@ -69,4 +64,51 @@ fi
 # Start supervisor
 mkdir -p /var/log/supervisor
 supervisord -c /etc/supervisor/supervisord.conf
-#exec /usr/sbin/sshd -D
+
+# install sshpass
+yum install sshpass -y
+
+# Key exchange with work nodes
+# Generate public-private keys
+#ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa
+
+while read -r node; do
+    echo "Execute key exchange within Master and $node"
+    sshpass -p $PASS ssh-copy-id node01
+    [ $? -eq 0 ] || exit 1
+    echo "Done"
+done < /root/work_node_list.dat
+
+###############################################################
+##                          Maria DB                         ##
+###############################################################
+
+# Install Maria DB
+yum install mariadb-server mariadb-devel -y
+
+###############################################################
+##                       Global Users                        ##
+###############################################################
+# Create global users
+export MUNGEUSER=991
+groupadd -g $MUNGEUSER munge
+useradd  -m -c "MUNGE Uid 'N' Gid Emporium" -d /var/lib/munge -u $MUNGEUSER -g munge  -s /sbin/nologin munge
+export SLURMUSER=992
+groupadd -g $SLURMUSER slurm
+useradd  -m -c "SLURM workload manager" -d /var/lib/slurm -u $SLURMUSER -g slurm  -s /bin/bash slurm
+
+###############################################################
+##                          Munge                            ##
+###############################################################
+# Install Munge
+yum install epel-release
+yum install munge munge-libs munge-devel -y
+echo "$ROOT_PASS" >/etc/munge/munge.key
+chown munge: /etc/munge/munge.key
+chmod 400 /etc/munge/munge.key
+
+# Copy the Munge key in every node
+#while read -r node; do
+#    sshpass -p $PASS scp /etc/munge/munge.key $node:/etc/munge
+#    sshpass -p $PASS ssh "chown -R munge: /etc/munge/ /var/log/munge/ && chmod 0700 /etc/munge/ /var/log/munge/"
+#done < /root/work_node_list.dat

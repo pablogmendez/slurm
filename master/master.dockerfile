@@ -11,14 +11,14 @@ RUN export http_proxy="http://pgmendez:Octubre2017@10.1.1.88:3128" && \
 	yum install python-setuptools -y && easy_install pip && \
 	pip install --proxy="$http_proxy" supervisor
 
-# Configure supervisor to start sshd
+# Configure supervisor
 ADD config/supervisor /tmp/supervisor
 RUN mkdir -p /etc/supervisor/conf.d && \
     cp supervisor/supervisord.conf /etc/supervisor/supervisord.conf && \
-    cp supervisor/sshd.conf /etc/supervisor/conf.d/
+    cp supervisor/sshd.conf /etc/supervisor/conf.d/ && \
+    cp supervisor/munged.conf /etc/supervisor/conf.d/
 
 # Configure ssh
 ADD config/init.sh /root/
+ADD config/work_node_list.dat /root/
 CMD chmod 777 /root/init.sh && /root/init.sh
-
-#RUN tail -f /dev/null
