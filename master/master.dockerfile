@@ -19,6 +19,6 @@ RUN mkdir -p /etc/supervisor/conf.d && \
 
 # Configure ssh
 ADD config/init.sh /root/
-RUN chmod 777 /root/init.sh && /root/init.sh
+CMD chmod 777 /root/init.sh && /root/init.sh
 
-RUN tail -f /dev/null
+#RUN tail -f /dev/null

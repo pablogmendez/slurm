@@ -68,5 +68,7 @@ if [ ! -f /.root_pw_set ]; then
 fi
 # Start supervisor
 mkdir -p /var/log/supervisor
-supervisord -c /etc/supervisor/supervisord.conf &
+supervisord -c /etc/supervisor/supervisord.conf
+#touch /tmp/zookeeper.out
+#tail -f /tmp/zookeeper.out
 #exec /usr/sbin/sshd -D
