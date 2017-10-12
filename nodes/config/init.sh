@@ -61,9 +61,6 @@ fi
 if [ ! -f /.root_pw_set ]; then
     /set_root_pw.sh
 fi
-# Start supervisor
-mkdir -p /var/log/supervisor
-supervisord -c /etc/supervisor/supervisord.conf
 
 ###############################################################
 ##                       Global Users                        ##
@@ -82,6 +79,6 @@ useradd  -m -c "SLURM workload manager" -d /var/lib/slurm -u $SLURMUSER -g slurm
 # Install Munge
 yum install epel-release
 yum install munge munge-libs munge-devel -y
-echo "$ROOT_PASS" >/etc/munge/munge.key
+echo "In9LBtuTZrugWYyIeN6s1bgdg0c3yqfd" >/etc/munge/munge.key
 chown munge: /etc/munge/munge.key
 chmod 400 /etc/munge/munge.key

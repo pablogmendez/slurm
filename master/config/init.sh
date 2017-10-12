@@ -61,16 +61,13 @@ fi
 if [ ! -f /.root_pw_set ]; then
     /set_root_pw.sh
 fi
-# Start supervisor
-mkdir -p /var/log/supervisor
-supervisord -c /etc/supervisor/supervisord.conf
 
 # install sshpass
 yum install sshpass -y
 
 # Key exchange with work nodes
 # Generate public-private keys
-#ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa
+ssh-keygen -t rsa -N "" -f /root/.ssh/id_rsa
 
 while read -r node; do
     echo "Execute key exchange within Master and $node"
@@ -92,7 +89,7 @@ yum install mariadb-server mariadb-devel -y
 # Create global users
 export MUNGEUSER=991
 groupadd -g $MUNGEUSER munge
-useradd  -m -c "MUNGE Uid 'N' Gid Emporium" -d /var/lib/munge -u $MUNGEUSER -g munge  -s /sbin/nologin munge
+useradd  -m -c "MUNGE Uid 'N' Gid Emporium" -d /var/lib/munge -u $MUNGEUSER -g munge  -s /bin/bash munge
 export SLURMUSER=992
 groupadd -g $SLURMUSER slurm
 useradd  -m -c "SLURM workload manager" -d /var/lib/slurm -u $SLURMUSER -g slurm  -s /bin/bash slurm
@@ -103,7 +100,7 @@ useradd  -m -c "SLURM workload manager" -d /var/lib/slurm -u $SLURMUSER -g slurm
 # Install Munge
 yum install epel-release
 yum install munge munge-libs munge-devel -y
-echo "$ROOT_PASS" >/etc/munge/munge.key
+echo "In9LBtuTZrugWYyIeN6s1bgdg0c3yqfd" >/etc/munge/munge.key
 chown munge: /etc/munge/munge.key
 chmod 400 /etc/munge/munge.key
 

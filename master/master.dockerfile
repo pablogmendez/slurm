@@ -20,5 +20,7 @@ RUN mkdir -p /etc/supervisor/conf.d && \
 
 # Configure ssh
 ADD config/init.sh /root/
+ADD config/init2.sh /root/
 ADD config/work_node_list.dat /root/
-CMD chmod 777 /root/init.sh && /root/init.sh
+RUN chmod 775 /root/init.sh && chmod 775 /root/init2.sh && /root/init.sh
+CMD /root/init2.sh
