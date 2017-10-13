@@ -3,9 +3,6 @@
 ###############################################################
 
 ## Install the openssh-server and epel-release
-
-yum -y install openssh-server epel-release openssh-clients
-yum -y install pwgen
 rm -f /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_rsa_key
 ssh-keygen -q -N "" -t dsa -f /etc/ssh/ssh_host_ecdsa_key
 ssh-keygen -q -N "" -t rsa -f /etc/ssh/ssh_host_rsa_key 
@@ -14,12 +11,6 @@ sed -i "s/UsePAM.*/UsePAM yes/g" /etc/ssh/sshd_config
 ssh-keygen -A
 
 ## Create Set Root Password Script. Name it as set_root_pw.sh. Save it in a folder
-
-#if [ -f /.root_pw_set ]; then
-#    echo "Root password already set!"
-#    exit 0
-#fi
-
 ROOT_PASS="Alfa1234"
 PASS=${ROOT_PASS:-$(pwgen -s 12 1)}
 _word=$( [ ${ROOT_PASS} ] && echo "preset" || echo "random" )

@@ -6,8 +6,12 @@ services:
       dockerfile: master.dockerfile
     depends_on:
       - node01
+    volumes:
+      - ./common:/tmp
 
   node01:
     build:
       context: ./nodes
       dockerfile: nodes.dockerfile
+    volumes:
+      - ./common:/tmp

@@ -9,7 +9,8 @@ RUN export http_proxy="http://pgmendez:Octubre2017@10.1.1.88:3128" && \
 	echo "proxy_password=Octubre2017" >> /etc/yum.conf && \
 	yum update -y && \
 	yum install python-setuptools -y && easy_install pip && \
-	pip install --proxy="$http_proxy" supervisor
+	pip install --proxy="$http_proxy" supervisor && \
+	yum -y install openssh-server epel-release openssh-clients pwgen sshpass rpm-build readline-devel openssl pam-devel
 
 # Configure supervisor
 ADD config/supervisor /tmp/supervisor
