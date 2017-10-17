@@ -2,15 +2,18 @@ FROM centos:latest
 
 WORKDIR /tmp
 
-RUN export http_proxy="http://pgmendez:Octubre2017@10.1.1.88:3128" && \
-	export https_proxy="http://pgmendez:Octubre2017@10.1.1.88:3128" && \
-	echo "proxy=http://10.1.1.88:3128" >> /etc/yum.conf && \
-	echo "proxy_username=pgmendez" >> /etc/yum.conf && \
-	echo "proxy_password=Octubre2017" >> /etc/yum.conf && \
-	yum update -y && \
-	yum install python-setuptools -y && easy_install pip && \
+# Configure proxy
+#RUN export http_proxy="http://pgmendez:Octubre2017@10.1.1.88:3128" && \
+#	export https_proxy="http://pgmendez:Octubre2017@10.1.1.88:3128" && \
+#	echo "proxy=http://10.1.1.88:3128" >> /etc/yum.conf && \
+#	echo "proxy_username=pgmendez" >> /etc/yum.conf && \
+#	echo "proxy_password=Octubre2017" >> /etc/yum.conf && \
+#	yum update -y &&
+
+RUN yum install python-setuptools -y && easy_install pip && \
 	pip install --proxy="$http_proxy" supervisor && \
-	yum -y install openssh-server epel-release openssh-clients pwgen sshpass rpm-build readline-devel openssl pam-devel
+	yum -y install openssh-server epel-release openssh-clients pwgen sshpass rpm-build readline-devel openssl pam-devel && \
+	yum -y install lynx make gcc perl-YAML perl-CPAN-DistnameInfo perl-Test-Mock-LWP gcc-c++ cpan perl-Time-HiRes perl-Version-Requirements perl-CPAN
 
 # Configure supervisor
 ADD config/supervisor /tmp/supervisor

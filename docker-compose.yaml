@@ -4,14 +4,14 @@ services:
     build:
       context: ./master
       dockerfile: master.dockerfile
-    depends_on:
-      - node01
+#    depends_on:
+#      - node01
     volumes:
-      - ./common:/tmp
+      - ./common:/tmp/common
 
-  node01:
-    build:
-      context: ./nodes
-      dockerfile: nodes.dockerfile
-    volumes:
-      - ./common:/tmp
+  # node01:
+  #   build:
+  #     context: ./nodes
+  #     dockerfile: nodes.dockerfile
+  #   volumes:
+  #     - ./common:/tmp/common
