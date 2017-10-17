@@ -2,17 +2,20 @@ FROM centos:latest
 
 WORKDIR /tmp
 
+# Add common directory
+ADD common /tmp/common
+
 # Configure proxy
-#RUN export http_proxy="http://pgmendez:Octubre2017@10.1.1.88:3128" && \
-#	export https_proxy="http://pgmendez:Octubre2017@10.1.1.88:3128" && \
-#	echo "proxy=http://10.1.1.88:3128" >> /etc/yum.conf && \
-#	echo "proxy_username=pgmendez" >> /etc/yum.conf && \
-#	echo "proxy_password=Octubre2017" >> /etc/yum.conf && \
-#	yum update -y &&
+RUN export http_proxy="http://pgmendez:Octubre2017@10.1.1.88:3128" && \
+	export https_proxy="http://pgmendez:Octubre2017@10.1.1.88:3128" && \
+	echo "proxy=http://10.1.1.88:3128" >> /etc/yum.conf && \
+	echo "proxy_username=pgmendez" >> /etc/yum.conf && \
+	echo "proxy_password=Octubre2017" >> /etc/yum.conf && \
+	yum update -y
 
 # Install common tools and configure ssh
-RUN yum install python-setuptools -y && easy_install pip && \
-	pip install --proxy="$http_proxy" supervisor && \
+RUN yum install python-setuptools -y && \ 
+	#easy_install pip && pip install --proxy="$http_proxy" supervisor && \
 	yum -y install openssh-server epel-release openssh-clients \
 	pwgen sshpass rpm-build readline-devel openssl pam-devel \
 	lynx make gcc perl-YAML perl-CPAN-DistnameInfo perl-Test-Mock-LWP \
@@ -29,15 +32,14 @@ RUN yum install epel-release munge munge-libs munge-devel -y && \
 	/tmp/common/scripts/configure_munge.sh
 
 # Configure supervisor
-ADD config/slurm /tmp/slurm
-ADD config/supervisor /tmp/supervisor
+ADD master/config/supervisor /tmp/supervisor
 RUN mkdir -p /etc/supervisor/conf.d && \
     cp supervisor/supervisord.conf /etc/supervisor/supervisord.conf && \
     cp supervisor/sshd.conf /etc/supervisor/conf.d/ && \
     cp supervisor/munged.conf /etc/supervisor/conf.d/
 
 # Install slurm
-RUN /tmp/common/scripts/install_slurm.sh
+RUN chmod 777 /tmp/common/scripts/install_slurm.sh && /tmp/common/scripts/install_slurm.sh
 
 # Configure ssh
 RUN chmod 775 /tmp/common/scripts/init.sh

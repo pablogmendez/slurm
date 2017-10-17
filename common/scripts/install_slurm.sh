@@ -2,9 +2,11 @@
 
 if [ ! -d /tmp/common/provisions/slurm/rpmbuild ]; then
 	echo "Compilando slurm"
+	mkdir -p /tmp/common/provisions/slurm/rpmbuild/RPMS
 	chown root:toot /tmp/common/provisions/slurm/slurm-17.02.7.tar.bz2
 	rpmbuild -ta /tmp/common/provisions/slurm/slurm-17.02.7.tar.bz2
-	cp -R /root/rpmbuild/RPMS/x86_64/rpmbuild /tmp/common/provisions/slurm
+	cp -R /root/rpmbuild/RPMS/x86_64 /tmp/common/provisions/slurm/rpmbuild/RPMS
+	echo "OK"
 fi
 cd /tmp/common/provisions/slurm/rpmbuild/RPMS/x86_64
 echo "Instalando slurm"

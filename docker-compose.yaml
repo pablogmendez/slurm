@@ -2,12 +2,10 @@ version: '2.2'
 services:
   master:
     build:
-      context: ./master
-      dockerfile: master.dockerfile
+      context: ./
+      dockerfile: master/master.dockerfile
 #    depends_on:
 #      - node01
-    volumes:
-      - ./common:/tmp/common
 
   # node01:
   #   build:
