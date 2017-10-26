@@ -1,0 +1,66 @@
+Stop the iperf3 service:
+
+$ sudo systemctl stop iperf3
+Start the service at boot:
+
+[stmiller@ny ~]$ sudo systemctl enable iperf3
+ln -s '/etc/systemd/system/iperf3.service' '/etc/systemd/system/multi-user.target.wants/iperf3.service'
+Disable the service at boot:
+
+$ sudo systemctl disable iperf3
+
+
+--------------------------------------
+
+http://patrakov.blogspot.com.ar/2011/01/writing-systemd-service-files.html
+
+--------------------------------------
+
+https://scottlinux.com/2014/12/08/how-to-create-a-systemd-service-in-linux-centos-7/
+
+--------------------------------------
+
+https://www.digitalocean.com/community/tutorials/how-to-use-journalctl-to-view-and-manipulate-systemd-logs
+
+--------------------------------------
+
+git push https://user:password@github.com/pablogmendez/slurm.git --all
+
+--------------------------------------
+
+journalctl -u nginx.service -u php-fpm.service --since today
+
+--------------------------------------
+
+ /etc/conf.d/holamundo
+
+
+# Intervalo de tiempo en el que se chequea la ip
+PULL_TIME=3600
+
+# URI del repositorio GIT-HUB
+GITHUB_URI=
+
+# Usuario de la cuenta Git-Hub
+GITHUB_USER=
+
+# Password de la cuenta Git-Hub
+GITHUB_PASSWORD=
+
+-------------------------------------
+ vim /etc/systemd/system/holamundo.service
+
+[Unit]
+Description=Hola mundo
+After=syslog.target
+
+[Service]
+EnvironmentFile=/etc/conf.d/holamundo
+ExecStart=/tmp/holamundo.sh $NOMBRE
+Restart=on-abort
+
+[Install]
+WantedBy=multy.user-target
+
+
+
