@@ -62,5 +62,8 @@ Restart=on-abort
 [Install]
 WantedBy=multy.user-target
 
+--------------------------------------
+ A=$(ip addr | grep 'inet ' | grep -v 127 | cut -f6 -d' ' | cut -f1 -d/)
+
 
 
